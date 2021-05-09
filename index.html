@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <div id='app'>
+        <input type='text' style='color: #fff;' v-model='query' placeholder='Type something to search'/>
+        <div class='tbl-header'>
+            <table cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                    <tr>
+                        <th>
+                            <label>
+                                <input type="checkbox" class="filled-in" v-model='deleteAll' v-on:change='watchFunc()'/>
+                                <span></span>
+                            </label>
+                        </th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tbl-content">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tbody>
+                    <tr v-for='(data, index) in dataSet.slice((currentPage-1)*10,currentPage*10)' :key='data.id'>
+                        <td>
+                            <label>
+                                <input type="checkbox" class="filled-in" :value='Number(data.id)' v-model = 'deleteList'/>
+                                <span></span>
+                            </label>
+                        </td>
+                        <td>{{data.name}}</td>
+                        <td>{{data.email}}</td>
+                        <td>{{data.role}}</td>
+                        <td class='row'>
+                            <i href="#modal1" class='material-icons modal-trigger pointer col'
+                                v-on:click='selectUser(index, data.id)'>edit</i>
+                            <i class='material-icons delete pointer col'
+                                v-on:click='deleteUser(index, data.id)'>delete</i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input placeholder='Name' id="name" type="text" v-model='selected.name'>
+                        <label for="name">Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder='Email' id="email" type="text" v-model='selected.email'>
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder='Role' id="role" type="text" v-model='selected.role'>
+                        <label for="role">Role</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#close" class="modal-close btn-flat delete">Close</a>
+                <a href="#save" class="modal-close btn-flat" v-on:click='saveUser'>Save</a>
+            </div>
+        </div>
+        <br />
+        <a class="waves-effect waves-light btn red" v-on:click='deleteMultiple'>Delete Selected</a>
+        <br />
+
+        <ul class="pagination">
+            <li v-on:click='currentPage = 1;resetDeletes()'><a href="#first"><i class="material-icons">chevron_left</i></a></li>
+            <li v-on:click='currentPage>1?currentPage -= 1:null;resetDeletes()'><a href="#previous"><i class="material-icons">chevron_left</i></a></li>
+            <li class="waves-effect" :class='{active : page==currentPage}' v-for='page in totalPages' v-on:click='currentPage = page;resetDeletes()'>
+                <a :href="'#'+page">{{page}}</a>
+            </li>
+            <li v-on:click='currentPage < (totalPages)?currentPage += 1:null;resetDeletes()'><a href="#next"><i class="material-icons">chevron_right</i></a></li>
+            <li v-on:click='currentPage = totalPages;resetDeletes()'><a href="#last"><i class="material-icons">chevron_right</i></a></li>
+        </ul>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- <script src='./data.js'></script> -->
+</body>
+<script type='text/javascript' src='./index.js'></script>
+<link rel='stylesheet' href='./index.css'>
+
+</html>
