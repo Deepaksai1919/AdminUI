@@ -64,6 +64,7 @@ var app = new Vue({
             });
             let total = filteredUsers.length;
             this.totalPages = total > 0 ?  Math.ceil(total/10) : 1;
+            this.currentPage = 1;
             return filteredUsers;
         }
     },
